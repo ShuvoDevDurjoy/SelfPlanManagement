@@ -1,8 +1,7 @@
+import connectDB from "@/db/connection";
+import User from "@/models/userModel";
+import { generateVerificationToken } from "@/utils/generateToken";
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import User from "@/lib/models/User";
-import { generateVerificationToken } from "@/lib/utils/generateToken";
-import { sendEmail } from "@/lib/utils/email";
 
 export async function POST(req) {
   try {
@@ -19,7 +18,7 @@ export async function POST(req) {
     user.passwordResetTokenExpiryDate = Date.now() + 15 * 60 * 1000;
     await user.save();
 
-    const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `/api/auth/${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
 
     await sendEmail({
       to: email,
